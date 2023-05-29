@@ -1,35 +1,64 @@
+#===================================================================
 #
-#  Dialog Sample Makefile
+#   DIALOG.MAK - Dialog Application Make file
+#   Copyright    IBM Corporation 1996
 #
-#  Copyright (C) 1992 IBM Corporation
+#===================================================================
+#===================================================================
+# Include the file ibmsamp.inc which defines the various macros
+# depending on the target specified.
 #
-#      DISCLAIMER OF WARRANTIES.  The following [enclosed] code is
-#      sample code created by IBM Corporation. This sample code is not
-#      part of any standard or IBM product and is provided to you solely
-#      for  the purpose of assisting you in the development of your
-#      applications.  The code is provided "AS IS", without
-#      warranty of any kind.  IBM shall not be liable for any damages
-#      arising out of your use of the sample code, even if they have been
-#      advised of the possibility of such damages.                                                    *
+# The following macros are defined in ibmsamp.inc:
 #
+#       OBJDIR   - Directory where object files are created
+#       EXEDIR   - Directory where executable files are created
+#       RC       - Resource compiler
+#       RCFLAGS  - Resource compiler flags
+#       LINK     - Linker
+#       LFLAGS   - Linker flags
+#       MTLIBS   - Multithreaded versions of the runtime libraries
+#===================================================================
 
-include ..\ibmsamp.inc
+!include ..\..\ibmsamp.inc
 
-all:    DIALOG.EXE
-
-# Resources
+HEADERS = dialog.h
+#-------------------------------------------------------------------
 #
-dialog.res: dialog.h dialog.ico dialog.rc ..\prodinfo.bmp
-    copy ..\prodinfo.bmp
-    rc -r dialog.rc
-    del prodinfo.bmp
-
-# C files
+#   A list of all of the object files
 #
-dialog.obj: dialog.c dialog.h
+#-------------------------------------------------------------------
 
-# Main files: DIALOG.EXE
-#
-dialog.exe: dialog.mak dialog.def dialog.obj dialog.res
-    $(LINK) dialog, dialog, dialog, $(MTLIBS), dialog.def
-    rc -p -x dialog.res dialog.exe
+OBJS = $(OBJDIR)\dialog.obj
+
+#-------------------------------------------------------------------
+#   This section lists all files to be built by  make.  The
+#   makefile builds the executable as well as its associated help
+#   file.
+#-------------------------------------------------------------------
+all: $(EXEDIR)\dialog.exe
+
+#-------------------------------------------------------------------
+#   Dependencies
+#     This section lists all object files needed to be built for the
+#     application, along with the files it is dependent upon (e.g.
+#     its source and any header files).
+#-------------------------------------------------------------------
+
+$(OBJDIR)\dialog.res: $(HEADERS) dialog.dlg dialog.ico dialog.rc prodinfo.bmp
+                $(RC) $(RCFLAGS) $(@B).rc $@
+                @del prodinfo.bmp
+
+prodinfo.bmp :
+           copy ..\..\prodinfo.bmp $@
+
+$(OBJDIR)\dialog.obj: dialog.c $(HEADERS)
+
+$(EXEDIR)\dialog.exe: $(OBJS) $(@B).def $(OBJDIR)\$(@B).res
+   -$(CREATE_PATH)
+   $(LINK) $@ $(@B).def $(MTLIBS) $(OBJS)
+   $(RC) -p -x $(OBJDIR)\$(@B).res $@
+
+clean :
+        @if exist *.obj del *.obj
+        @if exist *.dll del *.dll
+        @if exist *.exe del *.exe
