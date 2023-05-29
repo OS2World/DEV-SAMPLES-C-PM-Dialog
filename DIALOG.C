@@ -132,20 +132,20 @@ int main(VOID)
                        NULL);           /* Initialization data          */
   if (!success)
   {
-    DisplayMessage("Could Not Register Class");
+    DisplayMessage( (PCH) "Could Not Register Class");
     exit(RETURN_ERROR);
   }
 
   success = WinRegisterClass(           /* Register window class        */
        hab,                             /* Anchor block handle          */
-       "MyWindow",                      /* Window class name            */
+       (PCSZ) "MyWindow",               /* Window class name            */
        MyWindowProc,                    /* Address of window procedure  */
        CS_SIZEREDRAW,                   /* Class style                  */
        0                                /* No extra window words        */
        );
   if (!success)
   {
-    DisplayMessage("Could Not Register Class");
+    DisplayMessage((PCH) "Could Not Register Class");
     exit(RETURN_ERROR);
   }
 
@@ -153,8 +153,8 @@ int main(VOID)
         HWND_DESKTOP,                   /* Desktop window is parent     */
         WS_VISIBLE,                     /* Frame style                  */
         &flCreate,                      /* Frame control flag           */
-        "MyWindow",                     /* Window class name            */
-        "",                             /* Window title                 */
+        (PCSZ) "MyWindow",              /* Window class name            */
+        (PCSZ) "",                      /* Window title                 */
         0L,                             /* Client style of VISIBLE      */
         (HMODULE)NULL,                  /* Resource is in .EXE file     */
         ID_MAINWND,                     /* Frame window identifier      */
@@ -162,11 +162,11 @@ int main(VOID)
 
   if (!hwndFrame)
   {
-    DisplayMessage("Could Not Create Main Window");
+    DisplayMessage((PCH) "Could Not Create Main Window");
     exit(RETURN_ERROR);
   }
 
-  WinSetWindowText(hwndFrame, "Dialog - Sample Program");
+  WinSetWindowText(hwndFrame, (PCSZ) "Dialog - Sample Program");
 
 /*
  * Get and dispatch messages from the application message queue
@@ -272,9 +272,9 @@ MRESULT EXPENTRY MyWindowProc ( HWND hwnd, ULONG msg, MPARAM mp1, MPARAM mp2 )
         {
           GpiSetColor( hps, CLR_NEUTRAL ); /* Text color same as PM       */
           pt.x = 50L; pt.y = 50L;         /* Coordinates of "You live in" */
-          GpiCharStringAt( hps, &pt, (LONG)strlen( szResponse ), szResponse );
+          GpiCharStringAt( hps, &pt, (LONG)strlen( szResponse ), (PCCH) szResponse );
           pt.x = 50L; pt.y = 30L;         /* Coordinates of location      */
-          GpiCharStringAt( hps, &pt, (LONG)strlen( szLocation ), szLocation );
+          GpiCharStringAt( hps, &pt, (LONG)strlen( szLocation ), (PCCH) szLocation );
         }
         WinEndPaint( hps );               /* Drawing is complete          */
       }
@@ -335,7 +335,7 @@ MRESULT EXPENTRY MyDlgProc( HWND hwndDlg, ULONG msg, MPARAM mp1, MPARAM mp2 )
                                         /* into szLocation.             */
           WinQueryWindowText( WinWindowFromID( hwndDlg, ID_ENTRYFIELD ),
                               LENGTH_STRING,
-                              szLocation );
+                              (PCH) szLocation );
           bComplete = TRUE;             /* Set switch so strings are    */
                                         /* drawn in WM_PAINT processing.*/
         case DID_CANCEL:         /* The Cancel pushbutton or Escape key */

@@ -6,12 +6,10 @@
 
 NAME    DIALOG   WINDOWAPI
 
-DESCRIPTION 'OS/2 Presentation Manager Dialog Sample Program'
+DESCRIPTION     '@#OS2World:5.00#@##1## 29 May 2023 20:00:00     ARCAOS-507::::::v5.00@@OS/2 Presentation Manager Dialog Sample Program'
 
 DATA    MULTIPLE
 
 STACKSIZE   8192
-HEAPSIZE    8192
 
-PROTMODE
 
